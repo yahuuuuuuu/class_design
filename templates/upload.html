@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link type="text/css" rel="stylesheet" href="../statics/css/main_test_upload.css">
+    <link rel="stylesheet" href="../statics/fonts/iconfont.css">
+    <link rel="stylesheet" href="../statics/css/index.css">
+</head>
+<body>
+
+<div class="container">
+    <ul>
+        <li><a id="link_home"><i class="iconfont icon-shouye"></i><span>首页</span></a></li>
+        <li><a id="link_mydoc"><i class="iconfont icon-content"></i><span>我的文稿</span></a></li>
+        <li><a id="link_my_shengao"><i class="iconfont icon-shengao"></i><span>我的审稿</span></a></li>
+        <li><a id="link_upload"><i class="iconfont icon-upload"></i><span>上传文稿</span></a></li>
+        <li><a id="link_qikan"><i class="iconfont icon-qikan"></i><span>所有期刊</span></a></li>
+
+        <li><a id="link_tuichu"><i class="iconfont icon-tuichu"></i><span>退出登陆</span></a></li>
+        <li><a id="link_yonghu"><i class="iconfont icon-yonghu"></i><span>用户中心</span></a></li>
+    </ul>
+
+    <div class="center-content">
+        <!-- 右侧区域的内容 -->
+        <div class="right-content">
+            <h1>上传文稿</h1>
+            <div class="upload-area">
+                <form>
+                    <label for="title">标题:</label>
+                    <input type="text" id="title" name="title" class="input-content"><br><br>
+
+                    <label for="author">作者:</label>
+                    <input type="text" id="author" name="author" class="input-content"><br><br>
+
+                    <label for="unit">单位:</label>
+                    <input type="text" id="unit" name="unit" class="input-content"><br><br>
+
+                    <label for="keywords">关键词:</label>
+                    <input type="text" id="keywords" name="keywords" class="input-content"><br><br>
+
+                    <label for="abstract">摘要:</label>
+                    <input type="text" id="abstract" name="abstract" class="input-content"><br><br>
+
+
+                    <label for="file">选择文稿文件:</label>
+                    <input type="file" id="file" name="file"><br><br>
+
+                    <input type="submit" value="提交" class="submit-button" id="submit">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+<script>
+    const homeLink = document.getElementById("link_home");
+    const myDocLink = document.getElementById("link_mydoc");
+    const myShengaoLink = document.getElementById("link_my_shengao");
+    const uploadLink = document.getElementById("link_upload");
+    const qikanLink = document.getElementById("link_qikan");
+    const tuichuLink = document.getElementById("link_tuichu");
+    const yonghuLink = document.getElementById("link_yonghu");
+    const rightContent = document.querySelector(".right-content");
+    var queryString = window.location.search;
+    var urlParams = new URLSearchParams(queryString);
+    var userId = urlParams.get('user_id');
+
+    // 监听链接点击事件，更新右侧内容
+    homeLink.addEventListener("click", function () {
+        window.location.href = '/main?user_id=' + userId;
+    });
+
+    myDocLink.addEventListener("click", function () {
+        window.location.href = '/mydoc?user_id=' + userId;
+    });
+
+    myShengaoLink.addEventListener("click", function () {
+        window.location.href = '/shengao?user_id=' + userId;
+    });
+
+    uploadLink.addEventListener("click", function () {
+        window.location.href = '/upload?user_id=' + userId;
+    });
+
+    qikanLink.addEventListener("click", function () {
+        window.location.href = '/qikan?user_id=' + userId;
+    });
+
+    tuichuLink.addEventListener("click", function () {
+        window.location.href = '/';
+    });
+
+    yonghuLink.addEventListener("click", function () {
+        window.location.href = '/yonghu?user_id=' + userId;
+    });
+
+
+    document.getElementById('submit').addEventListener('click', function (e) {
+        e.preventDefault(); // 阻止表单的默认提交行为
+
+        const formData = new FormData();
+        formData.append('title', document.getElementById('title').value);
+        formData.append('author', document.getElementById('author').value);
+        formData.append('unit', document.getElementById('unit').value);
+        formData.append('keywords', document.getElementById('keywords').value);
+        formData.append('abstract', document.getElementById('abstract').value);
+        formData.append('file', document.getElementById('file').files[0]);
+        formData.append('userId', userId);
+
+        fetch('/upload_doc', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log('upload success');
+                } else {
+                    console.log('upload failed');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+
+</script>
+</html>

@@ -1,0 +1,109 @@
+body {
+    background: #faebd7;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    /* 添加其他样式和样式属性 */
+}
+
+.center-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 添加其他样式和样式属性 */
+}
+
+.right-content {
+    /* 右侧区域的样式，可以设置宽度、背景色等 */
+    background-color: white;
+    width: 900px;
+    height: 620px;
+    border-radius: 10px;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-content h1 {
+    padding: 15px;
+    border-bottom: 2px solid #8f8f8f;
+}
+
+.right-content p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+    font-family: Arial;
+    align-items: center;
+    justify-content: center;
+}
+
+.area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.info-container {
+    text-align: center;
+}
+
+.info-container label {
+    font-weight: bold;
+    font-size: 20px;
+    color: #333; /* 设置标签文本颜色 */
+    margin-bottom: 10px;
+}
+
+.info-container span {
+    font-size: 20px;
+    color: #555; /* 设置文本颜色 */
+
+    /* 添加其他样式，例如字体大小、行高等 */
+}
+
+.action-button {
+    margin: 5px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.action-button {
+    margin-top: 10px;
+}

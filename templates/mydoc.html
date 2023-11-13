@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link type="text/css" rel="stylesheet" href="../statics/css/mydoc.css">
+    <link rel="stylesheet" href="../statics/fonts/iconfont.css">
+    <link rel="stylesheet" href="../statics/css/index.css">
+</head>
+<body>
+
+<div class="container">
+    <ul>
+        <li><a id="link_home"><i class="iconfont icon-shouye"></i><span>首页</span></a></li>
+        <li><a id="link_mydoc"><i class="iconfont icon-content"></i><span>我的文稿</span></a></li>
+        <li><a id="link_my_shengao"><i class="iconfont icon-shengao"></i><span>我的审稿</span></a></li>
+        <li><a id="link_upload"><i class="iconfont icon-upload"></i><span>上传文稿</span></a></li>
+        <li><a id="link_qikan"><i class="iconfont icon-qikan"></i><span>所有期刊</span></a></li>
+
+        <li><a id="link_tuichu"><i class="iconfont icon-tuichu"></i><span>退出登陆</span></a></li>
+        <li><a id="link_yonghu"><i class="iconfont icon-yonghu"></i><span>用户中心</span></a></li>
+    </ul>
+
+    <div class="center-content">
+        <!-- 右侧区域的内容 -->
+        <div class="right-content">
+            <h1>我的文稿</h1>
+            <div class="mydoc-container">
+                <table id="data-table">
+                    <tr>
+                        <th style="display: none">ID</th>
+                        <th>标题</th>
+                        <th>作者</th>
+                        <th>单位</th>
+                        <th>去向</th>
+                        <th>状态</th>
+                        <th>摘要</th>
+                        <th>关键词</th>
+                        <th>操作</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+<script>
+    const homeLink = document.getElementById("link_home");
+    const myDocLink = document.getElementById("link_mydoc");
+    const myShengaoLink = document.getElementById("link_my_shengao");
+    const uploadLink = document.getElementById("link_upload");
+    const qikanLink = document.getElementById("link_qikan");
+    const tuichuLink = document.getElementById("link_tuichu");
+    const yonghuLink = document.getElementById("link_yonghu");
+    const rightContent = document.querySelector(".right-content");
+    var queryString = window.location.search;
+    var urlParams = new URLSearchParams(queryString);
+    var userId = urlParams.get('user_id');
+
+    // 监听链接点击事件，更新右侧内容
+    homeLink.addEventListener("click", function () {
+        window.location.href = '/main?user_id=' + userId;
+    });
+
+    myDocLink.addEventListener("click", function () {
+        window.location.href = '/mydoc?user_id=' + userId;
+    });
+
+    myShengaoLink.addEventListener("click", function () {
+        window.location.href = '/shengao?user_id=' + userId;
+    });
+
+    uploadLink.addEventListener("click", function () {
+        window.location.href = '/upload?user_id=' + userId;
+    });
+
+    qikanLink.addEventListener("click", function () {
+        window.location.href = '/qikan?user_id=' + userId;
+    });
+
+    tuichuLink.addEventListener("click", function () {
+        window.location.href = '/';
+    });
+
+    yonghuLink.addEventListener("click", function () {
+        window.location.href = '/yonghu?user_id=' + userId;
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const user_id = userId; // 从前端或cookie中获取用户ID
+
+        // 创建 XMLHttpRequest 对象
+        const xhr = new XMLHttpRequest();
+
+        // 配置请求
+        xhr.open('GET', `/get_user_docs/${user_id}`, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        // 处理响应
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+
+                // 在前端动态生成表格内容
+                const table = document.querySelector('table');
+                data.forEach(doc => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                    <td style="display: none">${doc.id}</td>
+                    <td>${doc.title}</td>
+                    <td>${doc.author}</td>
+                    <td>${doc.unit}</td>
+                    <td>${doc.destination}</td>
+                    <td>${doc.status}</td>
+                    <td>${doc.abstract}</td>
+                    <td>${doc.keywords}</td>
+                    <td><a class="action-button">删除</a></td>
+                `;
+                    table.appendChild(row);
+
+                    // 添加点击事件处理程序来获取对应行的ID
+                    const deleteButton = row.querySelector('.action-button');
+                    deleteButton.addEventListener('click', function () {
+                        const idCell = row.querySelector('td:first-child');
+                        const id = idCell.innerText;
+                        console.log('Delete ID: ' + id);
+                        deleteDocumentById(id)
+                        // 在这里执行删除操作或将ID发送到后端进行处理
+                    });
+                });
+            } else {
+                // 处理错误
+                console.error('请求失败:', xhr.status);
+            }
+        };
+
+        // 发送请求
+        xhr.send();
+    });
+
+    function deleteDocumentById(id) {
+        // 创建 XMLHttpRequest 对象
+        const xhr = new XMLHttpRequest();
+
+        // 配置请求
+        xhr.open('POST', '/delete_document', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        // 处理响应
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log('Document deleted successfully');
+                // 在这里可以执行其他操作或提示用户删除成功
+                window.location.reload();
+            } else {
+                // 处理错误
+                console.error('请求失败:', xhr.status);
+                // 在这里可以执行错误处理操作或提示用户删除失败
+            }
+        };
+
+        // 发送ID到后端
+        xhr.send(JSON.stringify({id: id}));
+    }
+
+
+</script>
+</html>

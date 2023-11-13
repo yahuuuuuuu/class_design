@@ -1,0 +1,139 @@
+body {
+    background: #faebd7;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    /* 添加其他样式和样式属性 */
+}
+
+.center-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 添加其他样式和样式属性 */
+}
+
+.right-content {
+    /* 右侧区域的样式，可以设置宽度、背景色等 */
+    background-color: white;
+    width: 900px;
+    height: 620px;
+    border-radius: 10px;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-content h1 {
+    padding: 15px;
+    border-bottom: 2px solid #8f8f8f;
+}
+
+.mydoc-container {
+    background-color: #f0f0f0;
+    padding: 10px;
+    min-width: 0px;
+    min-height: 0px;
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin: 15px;
+}
+
+.mydoc-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mydoc-container th {
+    flex: 1;
+}
+
+.mydoc-container th, .mydoc-container td {
+    flex: 1;
+    border-bottom: 1px solid #8f8f8f; /* 设置底部边框样式 */
+    padding: 8px; /* 设置单元格内边距 */
+}
+
+/* 样式用于添加蒙板 */
+tr.hovered {
+    background-color: #ccc;
+    cursor: pointer;
+}
+
+/* 蒙板样式 */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+/* 按钮样式 */
+.action-button {
+    margin: 5px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+td, th {
+    text-align: center; /* 水平居中 */
+    vertical-align: middle; /* 垂直居中 */
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.popup-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.access-button {
+    margin: 5px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.reject-button {
+    margin: 5px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}

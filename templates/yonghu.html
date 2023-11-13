@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link type="text/css" rel="stylesheet" href="../statics/css/yonghu.css">
+    <link rel="stylesheet" href="../statics/fonts/iconfont.css">
+    <link rel="stylesheet" href="../statics/css/index.css">
+</head>
+<body>
+
+<div class="container">
+    <ul>
+        <li><a id="link_home"><i class="iconfont icon-shouye"></i><span>首页</span></a></li>
+        <li><a id="link_mydoc"><i class="iconfont icon-content"></i><span>我的文稿</span></a></li>
+        <li><a id="link_my_shengao"><i class="iconfont icon-shengao"></i><span>我的审稿</span></a></li>
+        <li><a id="link_upload"><i class="iconfont icon-upload"></i><span>上传文稿</span></a></li>
+        <li><a id="link_qikan"><i class="iconfont icon-qikan"></i><span>所有期刊</span></a></li>
+
+        <li><a id="link_tuichu"><i class="iconfont icon-tuichu"></i><span>退出登陆</span></a></li>
+        <li><a id="link_yonghu"><i class="iconfont icon-yonghu"></i><span>用户中心</span></a></li>
+    </ul>
+
+    <div class="center-content">
+        <!-- 右侧区域的内容 -->
+        <div class="right-content">
+            <h1>个人中心</h1>
+            <div class="area">
+                <div class="info-container">
+                    <label for="degree">学位：</label>
+                    <span id="degree">test</span><br>
+
+                    <label for="background">背景：</label>
+                    <span id="background">test</span><br>
+
+                    <label for="sex">性别：</label>
+                    <span id="sex">test</span><br>
+
+                    <label for="password">密码：</label>
+                    <span id="password">test</span><br>
+                </div>
+                <button class="action-button" id="change-info">修改</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="info-modal">
+    <div class="modal-content">
+        <label for="newDegree">新学位：</label>
+        <input type="text" id="newDegree" value="默认学位"><br>
+
+        <label for="newBackground">新背景：</label>
+        <input type="text" id="newBackground" value="默认背景"><br>
+
+        <label for="newSex">新性别：</label>
+        <input type="text" id="newSex" value="默认性别"><br>
+
+        <label for="newPassword">新密码：</label>
+        <input type="password" id="newPassword" value="默认密码"><br>
+
+        <button class="action-button" id="submit-info">提交</button>
+        <button class="action-button" id="cancel-info">取消</button>
+    </div>
+</div>
+
+</body>
+
+
+<script>
+    // 获取链接和右侧内容区域的引用
+    const homeLink = document.getElementById("link_home");
+    const myDocLink = document.getElementById("link_mydoc");
+    const myShengaoLink = document.getElementById("link_my_shengao");
+    const uploadLink = document.getElementById("link_upload");
+    const qikanLink = document.getElementById("link_qikan");
+    const tuichuLink = document.getElementById("link_tuichu");
+    const yonghuLink = document.getElementById("link_yonghu");
+    const rightContent = document.querySelector(".right-content");
+    var queryString = window.location.search;
+    var urlParams = new URLSearchParams(queryString);
+    var userId = urlParams.get('user_id');
+
+    // 监听链接点击事件，更新右侧内容
+    homeLink.addEventListener("click", function () {
+        window.location.href = '/main?user_id=' + userId;
+    });
+
+    myDocLink.addEventListener("click", function () {
+        window.location.href = '/mydoc?user_id=' + userId;
+    });
+
+    myShengaoLink.addEventListener("click", function () {
+        window.location.href = '/shengao?user_id=' + userId;
+    });
+
+    uploadLink.addEventListener("click", function () {
+        window.location.href = '/upload?user_id=' + userId;
+    });
+
+    qikanLink.addEventListener("click", function () {
+        window.location.href = '/qikan?user_id=' + userId;
+    });
+
+    tuichuLink.addEventListener("click", function () {
+        window.location.href = '/';
+    });
+
+    yonghuLink.addEventListener("click", function () {
+        window.location.href = '/yonghu?user_id=' + userId;
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const user_id = userId; // 从前端或cookie中获取用户ID
+
+        // 创建 XMLHttpRequest 对象
+        const xhr = new XMLHttpRequest();
+
+        // 配置请求
+        xhr.open('GET', `/get_userinfo/${user_id}`, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        // 处理响应
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                const password = data.password;
+                const sex = data.sex;
+                const background = data.background;
+                const degree = data.degree;
+                document.getElementById('degree').textContent = degree;
+                document.getElementById('background').textContent = background;
+                document.getElementById('sex').textContent = sex;
+                document.getElementById('password').textContent = password;
+
+                // 获取模态框中的输入框元素
+                var newDegreeInput = document.getElementById('newDegree');
+                var newBackgroundInput = document.getElementById('newBackground');
+                var newSexInput = document.getElementById('newSex');
+                var newPasswordInput = document.getElementById('newPassword');
+
+                // 设置默认值
+                newDegreeInput.value = degree;
+                newBackgroundInput.value = background;
+                newSexInput.value = sex;
+                newPasswordInput.value = password;
+                console.log(data)
+            } else {
+                // 处理错误
+                console.error('请求失败:', xhr.status);
+            }
+        };
+
+        // 发送请求
+        xhr.send();
+    });
+
+
+    document.getElementById('change-info').addEventListener('click', function () {
+        document.getElementById('info-modal').style.display = 'flex';
+    });
+
+    document.getElementById('cancel-info').addEventListener('click', function () {
+        document.getElementById('info-modal').style.display = 'none';
+    });
+
+    document.getElementById('submit-info').addEventListener('click', function () {
+        // 获取新的值
+        var newDegree = document.getElementById('newDegree').value;
+        var newBackground = document.getElementById('newBackground').value;
+        var newSex = document.getElementById('newSex').value;
+        var newPassword = document.getElementById('newPassword').value;
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/update_user');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        console.log(JSON.stringify({user_id: userId, degree: newDegree, background: newBackground, sex: newSex, password: newPassword}))
+        xhr.send(JSON.stringify({user_id: userId, degree: newDegree, background: newBackground, sex: newSex, password: newPassword}))
+
+
+        // 隐藏模态框
+        document.getElementById('info-modal').style.display = 'none';
+        location.reload();
+    });
+
+</script>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link type="text/css" rel="stylesheet" href="../statics/css/journal.css">
+    <link rel="stylesheet" href="../statics/fonts/iconfont.css">
+    <link rel="stylesheet" href="../statics/css/index.css">
+</head>
+<body>
+
+<div class="container">
+    <ul>
+        <li><a id="link_home"><i class="iconfont icon-shouye"></i><span>首页</span></a></li>
+        <li><a id="link_mydoc"><i class="iconfont icon-content"></i><span>我的文稿</span></a></li>
+        <li><a id="link_my_shengao"><i class="iconfont icon-shengao"></i><span>我的审稿</span></a></li>
+        <li><a id="link_upload"><i class="iconfont icon-upload"></i><span>上传文稿</span></a></li>
+        <li><a id="link_qikan"><i class="iconfont icon-qikan"></i><span>所有期刊</span></a></li>
+
+        <li><a id="link_tuichu"><i class="iconfont icon-tuichu"></i><span>退出登陆</span></a></li>
+        <li><a id="link_yonghu"><i class="iconfont icon-yonghu"></i><span>用户中心</span></a></li>
+    </ul>
+
+    <div class="center-content">
+        <!-- 右侧区域的内容 -->
+        <div class="right-content">
+            <h1>所有期刊</h1>
+            <div class="mydoc-container">
+                <table>
+                    <tr>
+                        <th>名称</th>
+                        <th>注意事项</th>
+                        <th>介绍</th>
+                        <th>操作</th>
+
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="popupContainer" class="popup">
+    <div class="popup-content">
+        <h2>投稿窗口</h2>
+        <select id="submissionDropdown">
+            <option>None</option>
+        </select>
+        <button id="submitButton">提交</button>
+    </div>
+</div>
+
+</body>
+
+<script>
+    const homeLink = document.getElementById("link_home");
+    const myDocLink = document.getElementById("link_mydoc");
+    const myShengaoLink = document.getElementById("link_my_shengao");
+    const uploadLink = document.getElementById("link_upload");
+    const qikanLink = document.getElementById("link_qikan");
+    const tuichuLink = document.getElementById("link_tuichu");
+    const yonghuLink = document.getElementById("link_yonghu");
+    var queryString = window.location.search;
+    var urlParams = new URLSearchParams(queryString);
+    var userId = urlParams.get('user_id');
+    var selected_manu = null;
+    var selected_journal = null;
+
+    // 监听链接点击事件，更新右侧内容
+    homeLink.addEventListener("click", function () {
+        window.location.href = '/main?user_id=' + userId;
+    });
+
+    myDocLink.addEventListener("click", function () {
+        window.location.href = '/mydoc?user_id=' + userId;
+    });
+
+    myShengaoLink.addEventListener("click", function () {
+        window.location.href = '/shengao?user_id=' + userId;
+    });
+
+    uploadLink.addEventListener("click", function () {
+        window.location.href = '/upload?user_id=' + userId;
+    });
+
+    qikanLink.addEventListener("click", function () {
+        window.location.href = '/qikan?user_id=' + userId;
+    });
+
+    tuichuLink.addEventListener("click", function () {
+        window.location.href = '/';
+    });
+
+    yonghuLink.addEventListener("click", function () {
+        window.location.href = '/yonghu?user_id=' + userId;
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // 创建 XMLHttpRequest 对象
+        const xhr = new XMLHttpRequest();
+
+        // 配置请求，从后端获取 journal 表的数据
+        xhr.open('GET', '/get_journal_data', true);
+
+        // 处理响应
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+
+                // 获取表格
+                const table = document.querySelector('table');
+
+                // 在前端动态生成表格内容
+                data.forEach(journal => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                    <td>${journal.name}</td>
+                    <td>${journal.notice}</td>
+                    <td>${journal.introduction}</td>
+                    <td><a class="action-button" data-name="${journal.name}">投稿</a></td>
+                `;
+                    table.appendChild(row);
+
+                    // 获取弹出窗口和按钮元素
+                    const popupContainer = document.getElementById('popupContainer');
+                    const openPopupButton = row.querySelector('.action-button');
+
+                    // 绑定点击事件
+                    openPopupButton.addEventListener('click', function () {
+                        popupContainer.style.display = 'block';
+                    });
+
+                    // 获取弹出窗口中的元素
+                    const submissionDropdown = document.getElementById('submissionDropdown');
+                    const submitButton = document.getElementById('submitButton');
+                    const submitButtons = document.querySelectorAll('.action-button');
+
+                    submitButtons.forEach(button => {
+                        button.addEventListener('click', function () {
+                            const name = button.getAttribute('data-name');
+                            console.log('Selected journal name: ' + name);
+                            selected_journal = name;
+                            // 在这里执行与选定的期刊名称相关的操作
+                        });
+                    });
+
+                    // 绑定提交按钮的点击事件
+                    // 监听提交按钮的点击事件
+                    submitButton.addEventListener('click', function () {
+
+                        // 关闭弹出窗口
+                        popupContainer.style.display = 'none';
+
+                        // 创建 XMLHttpRequest 对象
+                        const xhr = new XMLHttpRequest();
+
+                        // 配置请求，发送 selected_journal 和 selected_manu 到后端
+                        xhr.open('POST', '/update_manuscript', true);
+                        xhr.setRequestHeader('Content-Type', 'application/json');
+
+                        // 定义要发送的数据
+                        const data = {
+                            selected_journal: selected_journal,
+                            selected_manu: selected_manu
+                        };
+
+                        // 发送数据
+                        xhr.send(JSON.stringify(data));
+
+                        // 处理响应
+                        xhr.onload = function () {
+                            if (xhr.status === 200) {
+                                // 处理成功响应
+                                console.log('提交成功');
+                            } else {
+                                // 处理错误响应
+                                console.error('请求失败:', xhr.status);
+                            }
+                        };
+                    });
+
+                });
+            } else {
+                // 处理错误
+                console.error('请求失败:', xhr.status);
+            }
+        };
+
+        // 发送请求
+        xhr.send();
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // 获取下拉表单元素
+        const submissionDropdown = document.getElementById('submissionDropdown');
+
+        // 假设 userId 是您从前端获取的用户ID
+        const user_Id = userId; // 替换成实际的用户ID
+
+        // 创建 XMLHttpRequest 对象
+        const xhr = new XMLHttpRequest();
+
+        // 配置请求，向后端发送 userId 请求数据
+        xhr.open('GET', `/get_manuscripts/${user_Id}`, true);
+
+        // 处理响应
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+
+                // 在前端动态生成下拉列表选项
+                data.forEach(manuscript => {
+                    const option = document.createElement('option');
+                    option.value = manuscript.id;
+                    option.textContent = manuscript.name;
+                    submissionDropdown.appendChild(option);
+                });
+
+                // 监听下拉列表的变化
+                submissionDropdown.addEventListener('change', function () {
+                    const selectedId = submissionDropdown.value;
+                    console.log('Selected ID: ' + selectedId);
+                    selected_manu = selectedId;
+                });
+            } else {
+                // 处理错误
+                console.error('请求失败:', xhr.status);
+            }
+        };
+
+        // 发送请求
+        xhr.send();
+    });
+
+
+</script>
+</html>

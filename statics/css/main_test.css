@@ -1,0 +1,119 @@
+body {
+    background: #faebd7;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    /* 添加其他样式和样式属性 */
+}
+
+.center-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 添加其他样式和样式属性 */
+}
+
+.right-content {
+    /* 右侧区域的样式，可以设置宽度、背景色等 */
+    background-color: white;
+    width: 900px;
+    height: 620px;
+    border-radius: 10px;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-content h1 {
+    padding: 15px;
+    border-bottom: 2px solid #8f8f8f;
+}
+
+
+.split-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+    flex: 1;
+}
+
+.left-half, .right-half {
+    flex: 1;
+}
+
+.left-half, .right-half {
+    background-color: #f0f0f0; /* 设置背景颜色，用于显示区域 */
+    padding: 10px; /* 添加内边距以区分内容 */
+    border: 1px solid #ddd; /* 添加边框以区分内容 */
+    border-radius: 5px;
+    min-width: 0px;
+    min-height: 0px;
+}
+
+.left-half {
+    margin-right: 10px; /* 10px 的右侧间距 */
+    display: flex;
+    flex-direction: column;
+}
+
+.right-half {
+    margin-left: 10px; /* 10px 的左侧间距 */
+    display: flex;
+    flex-direction: column;
+}
+
+.top-half, .bottom-half {
+    flex: 1;
+    /* 上半部分和下半部分的样式 */
+    background-color: #cccccc;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    min-width: 0px;
+    min-height: 0px;
+}
+
+.right-content p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+    font-family: Arial;
+}
+
+.mydoc-container {
+    background-color: #f0f0f0;
+    padding: 10px;
+    min-width: 0px;
+    min-height: 0px;
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    display: flex;
+    margin: 15px;
+}
+
+.mydoc-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mydoc-container th {
+    flex: 1;
+}
+
+.mydoc-container th, .mydoc-container td {
+    flex: 1;
+    border-bottom: 1px solid #8f8f8f; /* 设置底部边框样式 */
+    padding: 8px; /* 设置单元格内边距 */
+}
